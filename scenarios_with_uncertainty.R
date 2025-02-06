@@ -106,12 +106,12 @@ output <- model_default(
 # select the parameter set and data columns with dplyr::select()
 # add the R value for visualisation
 # calculate new infections, and use tidyr to unnest the data column
-data <- select(output, param_set, transmission_rate, data) %>%
+data <- dplyr::select(output, param_set, transmission_rate, data) %>%
   mutate(
     r_value = r_samples,
     new_infections = map(data, new_infections)
   ) %>%
-  select(-data) %>%
+  dplyr::select(-data) %>%
   unnest(new_infections)
 
 
@@ -168,12 +168,12 @@ output <- model_default(
 )
 
 # reformat data for plotting
-data <- select(output, param_set, transmission_rate, data) %>%
+data <- dplyr::select(output, param_set, transmission_rate, data) %>%
   mutate(
     r_value = r_samples,
     new_infections = map(data, new_infections)
   ) %>%
-  select(-data) %>%
+  dplyr::select(-data) %>%
   unnest(new_infections)
 
 
