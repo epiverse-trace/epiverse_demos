@@ -55,7 +55,7 @@ linelist
 
 # line list can be validated using tags
 # this will error due to the line list being messy
-linelist::validate_linelist(linelist)
+# linelist::validate_linelist(linelist)
 
 # Scan line list data for issues ------------------------------------------
 
@@ -83,8 +83,8 @@ linelist <- linelist |>
 
 
 # clean inconsistent sex using dictionary
-linelist |> cleanepi::clean_using_dictionary(
-  dictionary = data.frame())
+# linelist |> cleanepi::clean_using_dictionary(
+#   dictionary = data.frame())
 
 # clean spelling mistakes using dictionary
 linelist$case_type[agrep(pattern = "suspected", x = linelist$case_type)] <- "suspected"
@@ -99,6 +99,10 @@ linelist$outcome[agrep(pattern = "died", x = linelist$outcome)] <- "died"
 # line list is now valid after cleaning
 linelist::validate_linelist(linelist)
 
+# Get data frame with tagged columns only
+linelist_tags_df <- linelist::tags_df(linelist)
+
+linelist_tags_df
 
 # Aggregate and visualise data --------------------------------------------
 
