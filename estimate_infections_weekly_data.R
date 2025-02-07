@@ -90,7 +90,7 @@ estimates_epinow <- epinow(
 )
 
 # Initial look at the output
-plot(Rt_epinow$plots$R)
+plot(estimates_epinow$plots$R)
 
 # ============================================================================== #
 # ESTIMATE RT WITH EPIESTIM
