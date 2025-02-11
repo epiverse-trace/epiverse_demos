@@ -16,7 +16,7 @@ library(parallel)     # For parallel processing
 library(withr)        # For setting local options
 
 # Set the number of cores for faster processing
-local_options(list(mc.cores = parallel::detectCores() - 1))
+withr::local_options(list(mc.cores = parallel::detectCores() - 1))
 
 # Extract and preprocess data on UK COVID deaths for EpiNow2
 uk_covid_deaths <- incidence2::covidregionaldataUK %>%
@@ -40,7 +40,7 @@ uk_covid_deaths
 # ============================================================================== #
 
 # Extract distribution the incubation period for COVID-19
-covid_incubation_dist <- epiparameter_db(
+covid_incubation_dist <- epiparameter::epiparameter_db(
   disease = "covid",
   epi_name = "incubation",
   single_epiparameter = TRUE
@@ -50,7 +50,7 @@ covid_incubation_dist <- epiparameter_db(
 covid_incubation_dist
 
 # Extract parameters for EpiNow2 using LogNormal distribution
-incubation_params <- get_parameters(covid_incubation_dist)
+incubation_params <- epiparameter::get_parameters(covid_incubation_dist)
 incubation_max_days <- round(quantile(covid_incubation_dist, 0.999))  # Upper 99.9% range needed for EpiNow2
 
 # Create a LogNormal object for the incubation period
@@ -61,7 +61,7 @@ incubation_lognormal <- EpiNow2::LogNormal(
 )
 
 # Get the onset-to-death distribution
-onset_to_death_dist <- epiparameter_db(
+onset_to_death_dist <- epiparameter::epiparameter_db(
   disease = "covid",
   epi_name = "onset to death",
   single_epiparameter = TRUE
@@ -71,7 +71,7 @@ onset_to_death_dist <- epiparameter_db(
 onset_to_death_dist
 
 # Extract parameters for EpiNow2 using LogNormal distribution
-onset_death_params <- get_parameters(onset_to_death_dist)
+onset_death_params <- epiparameter::get_parameters(onset_to_death_dist)
 onset_death_max_days <- round(quantile(onset_to_death_dist, 0.999))  # Upper 99.9% range
 
 # Create an EpiNow2 LogNormal object for the onset-to-death distribution
@@ -85,7 +85,7 @@ onset_death_lognormal <- EpiNow2::LogNormal(
 infection_to_death_dist <- incubation_lognormal + onset_death_lognormal
 
 # Extract the serial interval distribution
-serial_interval_dist <- epiparameter_db(
+serial_interval_dist <- epiparameter::epiparameter_db(
   disease = "covid",
   epi_name = "serial",
   single_epiparameter = TRUE
@@ -98,7 +98,7 @@ serial_interval_dist
 serial_interval_max_days <- round(quantile(serial_interval_dist, 0.999))
 
 # Extract parameters for the serial interval
-serial_interval_params <- get_parameters(serial_interval_dist)
+serial_interval_params <- epiparameter::get_parameters(serial_interval_dist)
 
 # Create a LogNormal object for the serial interval
 serial_interval_lognormal <- EpiNow2::LogNormal(
@@ -112,10 +112,10 @@ serial_interval_lognormal <- EpiNow2::LogNormal(
 # ============================================================================== #
 
 # Estimate infections using the non-mechanistic model
-infection_estimates <- epinow(
+infection_estimates <- EpiNow2::epinow(
   data = uk_covid_deaths,  # Time series data
-  generation_time = generation_time_opts(serial_interval_lognormal),  # Generation time
-  delays = delay_opts(infection_to_death_dist),  # Delay from infection to death
+  generation_time = EpiNow2::generation_time_opts(serial_interval_lognormal),  # Generation time
+  delays = EpiNow2::delay_opts(infection_to_death_dist),  # Delay from infection to death
   rt = NULL  # Rt is not estimated
 )
 
