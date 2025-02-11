@@ -147,3 +147,9 @@ infection_estimates$plots$infections +
     title = "Estimated Dynamics of SARS-CoV-2 Infections in the UK",
     subtitle = "Reconstructed using data on reported deaths. Dashed lines indicate key intervention dates."
   )
+
+#' Further exploration
+
+#' - Explore the following priors on the Gaussian process and observe what changes in the output:
+#'    - alpha: gp = gp_opts(alpha = Normal(0, 0.05))
+#'    - length scale: gp = gp_opts(ls = LogNormal(mean = 14, sd = 7))
