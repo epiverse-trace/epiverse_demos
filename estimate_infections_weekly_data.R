@@ -208,26 +208,30 @@ rt_plot <- ggplot() +
     color = "Method",
     fill = "Method"
   ) +
-    scale_fill_manual(
-        values = c(
-            "EpiNow2" = "#E69E90",
-            "EpiEstim" = "#0072B2"
-        )
-    ) +
-    scale_color_manual(
-        values = c(
-            "EpiNow2" = "#AB8199",
-            "EpiEstim" = "#5983AB"
-        )
-    ) +
-    scale_x_date(date_breaks = "month", date_labels = "%b '%y") +
-    theme_minimal() +
-    theme(legend.position = "bottom")
-rt_plot
+  scale_fill_manual(
+    values = c(
+      "EpiNow2" = "#E69E90",
+      "EpiEstim" = "#0072B2"
+    )
+  ) +
+  scale_color_manual(
+    values = c(
+      "EpiNow2" = "#AB8199",
+      "EpiEstim" = "#5983AB"
+    )
+  ) +
+  scale_x_date(date_breaks = "month", date_labels = "%b '%y") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
 
-# Further exploration
+plot(rt_plot)
 
-# - Explore different Rt priors in estimate_R() and epinow()
+#' Further exploration
+
+#' - Explore different Rt priors:
+#'    - For EpiEstim::estimate_R(), use the create_config() function
+#'    - For EpiNow2::epinow(), pass the EpiNow2 distribution to rt_opts() as
+#'    was done in the sample above.
 # - Turn off rt estimation in epinow() with rt = NULL. Rt is now back
 #   calculated using deconvolved infections like in EpiEstim. Compare
 #   the results.
