@@ -1,4 +1,4 @@
-# Pandemic scenarios with uncertainty -------------------------------------------------
+# Pandemic scenarios with uncertainty -----------------------------------------
 
 # This script builds on the concepts outlined in these vignettes:
 # https://epiverse-trace.github.io/epidemics/articles/modelling_param_uncertainty.html
@@ -8,18 +8,14 @@
 # Load packages
 library(epidemics)
 library(EpiEstim) # for Rt estimation
-library(dplyr)
-library(tidyr)
-library(purrr)
-library(ggplot2)
-library(colorspace) # for reproducibility
+library(tidyverse)
 library(withr)
 
-# Generate an R estimate with EpiEstim --------------------------------------------------
+# Generate an R estimate with EpiEstim ----------------------------------------
 
 # get 2009 influenza data from school in Pennsylvania
 data(Flu2009)
-flu_early_data <- filter(Flu2009$incidence, dates < "2009-05-10")
+flu_early_data <- dplyr::filter(Flu2009$incidence, dates < "2009-05-10")
 
 # define a PDF for the distribution of serial intervals
 serial_pdf <- dgamma(seq(0, 25), shape = 2.622, scale = 0.957)
@@ -29,26 +25,28 @@ serial_pdf <- serial_pdf / sum(serial_pdf)
 
 # Use EpiEstim to estimate R with uncertainty
 # Uses Gamma distribution by default
-output_R <- estimate_R(
+output_R <- EpiEstim::estimate_R(
   incid = flu_early_data,
   method = "non_parametric_si",
   config = make_config(list(si_distr = serial_pdf))
 )
+
+# Plot output to visualise
+plot(output_R, "R")
 
 # get mean mean and sd over time
 r_estimate_mean <- mean(output_R$R$`Mean(R)`)
 r_estimate_sd <- mean(output_R$R$`Std(R)`)
 
 # Generate 100 R samples
-r_samples <- with_seed(
+r_samples <- withr::with_seed(
   seed = 1,
-  rnorm(
-    n = 100, mean = r_estimate_mean, sd = r_estimate_sd
+  code = rnorm(
+    n = 100, 
+    mean = r_estimate_mean, 
+    sd = r_estimate_sd
   )
 )
-
-# Plot output to visualise
-plot(output_R, "R")
 
 # Set up the transmission model -------------------------------------------
 
@@ -62,7 +60,8 @@ contact_data <- socialmixr::contact_matrix(
 )
 
 # prepare contact matrix and demography vector for use in model
-contact_matrix <- t(contact_data$matrix) # transpose so R0 calculated correctly inside model
+# transpose so R0 calculated correctly inside model
+contact_matrix <- t(contact_data$matrix) 
 demography_vector <- contact_data$demography$population
 names(demography_vector) <- rownames(contact_matrix)
 
@@ -78,11 +77,12 @@ initial_conditions <- rbind(
   initial_conditions,
   initial_conditions
 )
+
 # assign rownames for clarity
 rownames(initial_conditions) <- rownames(contact_matrix)
 
 # define UK population object
-uk_population <- population(
+uk_population <- epidemics::population(
   name = "UK",
   contact_matrix = contact_matrix,
   demography_vector = demography_vector,
@@ -96,29 +96,30 @@ infectious_period <- 7
 beta <- r_samples / infectious_period
 
 # pass the vector of transmissibilities to the basic {epidemics} model
-output <- model_default(
+output <- epidemics::model_default(
   population = uk_population,
   transmission_rate = beta,
-  recovery_rate = 1/infectious_period,
+  recovery_rate = 1 / infectious_period,
   time_end = 600
 )
 
 # select the parameter set and data columns with dplyr::select()
 # add the R value for visualisation
 # calculate new infections, and use tidyr to unnest the data column
-data <- select(output, param_set, transmission_rate, data) %>%
+data <- dplyr::select(output, param_set, transmission_rate, data) %>%
   mutate(
     r_value = r_samples,
-    new_infections = map(data, new_infections)
+    new_infections = purrr::map(data, new_infections)
   ) %>%
-  select(-data) %>%
-  unnest(new_infections)
+  dplyr::select(-data) %>%
+  tidyr::unnest(new_infections)
 
 
 # Plot outputs ------------------------------------------------------------
 
 # plot the data
-filter(data) %>%
+data %>% 
+  dplyr::filter() %>%
   ggplot() +
   geom_line(
     aes(time, new_infections, col = r_value, group = param_set),
@@ -150,7 +151,7 @@ filter(data) %>%
 # Add an intervention -----------------------------------------------------
 
 # prepare a school-closure intervention with a differential effect on age groups
-close_schools <- intervention(
+close_schools <- epidemics::intervention(
   name = "School closure",
   type = "contacts",
   time_begin = 200,
@@ -159,26 +160,27 @@ close_schools <- intervention(
 )
 
 # run model with intervention
-output <- model_default(
+output <- epidemics::model_default(
   population = uk_population,
   transmission_rate = beta,
-  recovery_rate = 1/infectious_period,
+  recovery_rate = 1 / infectious_period,
   intervention = list(contacts = close_schools),
   time_end = 600
 )
 
 # reformat data for plotting
-data <- select(output, param_set, transmission_rate, data) %>%
-  mutate(
+data <- dplyr::select(output, param_set, transmission_rate, data) %>%
+  dplyr::mutate(
     r_value = r_samples,
     new_infections = map(data, new_infections)
   ) %>%
-  select(-data) %>%
-  unnest(new_infections)
+  dplyr::select(-data) %>%
+  tidyr::unnest(new_infections)
 
 
 # plot the data
-filter(data) %>%
+data %>% 
+  dplyr::filter() %>%
   ggplot() +
   geom_line(
     aes(time, new_infections, col = r_value, group = param_set),
