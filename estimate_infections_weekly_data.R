@@ -19,7 +19,7 @@ library(ggplot2) # For data visualisation
 library(janitor) # For data cleaning
 
 # Set the number of cores for faster processing
-local_options(list(mc.cores = parallel::detectCores() - 1))
+withr::local_options(list(mc.cores = parallel::detectCores() - 1))
 
 # Use the example data for confirmed cases from EpiNow2
 reported_cases <- EpiNow2::example_confirmed
@@ -34,14 +34,14 @@ reported_cases_weekly <- reported_cases_weekly[seq(7, nrow(reported_cases_weekly
 # ============================================================================== #
 
 # Extract distribution the incubation period for COVID-19
-covid_incubation_dist <- epiparameter_db(
+covid_incubation_dist <- epiparameter::epiparameter_db(
   disease = "covid",
   epi_name = "incubation",
   single_epiparameter = TRUE
 )
 
 # Extract the serial interval distribution
-serial_interval_dist <- epiparameter_db(
+serial_interval_dist <- epiparameter::epiparameter_db(
   disease = "covid",
   epi_name = "serial",
   single_epiparameter = TRUE
@@ -74,19 +74,19 @@ serial_interval_lognormal <- EpiNow2::LogNormal(
 )
 
 # Create data with missing dates filled in for EpiNow2
-input_data_epinow <- fill_missing(
+input_data_epinow <- EpiNow2::fill_missing(
   reported_cases_weekly,
   missing_dates = "accumulate",
   initial_accumulate = 1 # Don't model the first data point (to match EpiEstim method)
 )
 
 # Estimate infections using EpiNow2
-estimates_epinow <- epinow(
+estimates_epinow <- EpiNow2::epinow(
   data = input_data_epinow,
   generation_time = generation_time_opts(serial_interval_lognormal),
   forecast = forecast_opts(horizon = 0, accumulate = 1), # Forecasting is turned off to match with EpiEstim
   rt = rt_opts(
-      prior = Gamma(mean = 5, sd = 5) # same prior as used in EpiEstim default
+    prior = Gamma(mean = 5, sd = 5) # same prior as used in EpiEstim default
   ),
   CrIs = c(0.025, 0.05, 0.25, 0.75, 0.95, 0.975), # same prior as used in EpiEstim default
   verbose = FALSE
@@ -106,22 +106,22 @@ si_sd <- serial_interval_dist$summary_stats$sd
 
 # Prepare the input data
 input_data_epiestim <- reported_cases_weekly |>
-  rename(I = confirm) |>
-  mutate(
+  dplyr::rename(I = confirm) |>
+  dplyr::mutate(
     dates = as.Date(date),
     I = as.integer(I)
   ) |>
-  select(I)
+  dplyr::select(I)
 
 # Estimate Rt using weekly aggregated data
-estimates_epiestim <- estimate_R(
+estimates_epiestim <- EpiEstim::estimate_R(
   incid = input_data_epiestim$I,
   dt = 7L, # Aggregation window
   dt_out = 7L, # Estimation rolling window
   recon_opt = "naive",
   method = "parametric_si",
   config = make_config(
-      list(mean_si = si_mean, std_si = si_sd)
+    list(mean_si = si_mean, std_si = si_sd)
   )
 )
 
@@ -132,25 +132,31 @@ plot(estimates_epiestim, "R") # Rt estimates only
 # COMPARING THE RESULTS FROM EpiNow2 and EpiEstim
 # ==============================================================================
 # Extract and process the Rt estimates from EpiEstim output
-epiestim_Rt <- mutate(estimates_epiestim$R, method = "EpiEstim")
+epiestim_Rt <- estimates_epiestim$R |>
+  dplyr::mutate(method = "EpiEstim")
 
 # Align the Rt estimates with the original dates in the complete time series
-complete_dates <- seq(min(reported_cases_weekly$date), max(reported_cases_weekly$date), 1)
+complete_dates <- seq(
+  min(reported_cases_weekly$date),
+  max(reported_cases_weekly$date),
+  1
+)
+
 Rt_ts_epiestim <- data.frame(date = complete_dates) |>
-  mutate(lookup = seq_along(complete_dates)) |>
-  inner_join(
+  dplyr::mutate(lookup = seq_along(complete_dates)) |>
+  dplyr::inner_join(
     epiestim_Rt,
     by = join_by(lookup == t_start)
   ) |>
-  select(-c(lookup)) |>
-  clean_names()
+  dplyr::select(-c(lookup)) |>
+  janitor::clean_names()
 
 # Extract and process the Rt estimates from EpiNow2 output
 Rt_ts_epinow <- estimates_epinow$estimates$summarised |>
-  filter(variable == "R") |>
-  filter(date >= min(Rt_ts_epiestim$date, na.rm = TRUE)) |> # Start from EpiEstim's first estimate
-  mutate(method = "EpiNow2") |>
-  clean_names()
+  dplyr::filter(variable == "R") |>
+  dplyr::filter(date >= min(Rt_ts_epiestim$date, na.rm = TRUE)) |> # Start from EpiEstim's first estimate
+  dplyr::mutate(method = "EpiNow2") |>
+  janitor::clean_names()
 
 # Plot the results
 rt_plot <- ggplot() +
@@ -169,9 +175,9 @@ rt_plot <- ggplot() +
   geom_line(
     data = Rt_ts_epiestim,
     aes(
-        x = date,
-        y = mean_r,
-        color = method
+      x = date,
+      y = mean_r,
+      color = method
     ),
     linewidth = 0.55
   ) +
@@ -190,9 +196,9 @@ rt_plot <- ggplot() +
   geom_line(
     data = Rt_ts_epinow,
     aes(
-        x = date,
-        y = mean,
-        color = method
+      x = date,
+      y = mean,
+      color = method
     ),
     linewidth = 0.55
   ) +
