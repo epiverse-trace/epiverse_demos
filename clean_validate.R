@@ -7,11 +7,11 @@
 # {simulist} needs to be installed from a feature branch for now
 # remotes::install_github("epiverse-trace/simulist@messy")
 library(simulist)
-library(tibble)
-library(english)
 library(cleanepi)
 library(numberize)
 library(incidence2)
+library(tibble)
+library(english)
 library(tidyr)
 library(dplyr)
 
@@ -21,22 +21,20 @@ set.seed(1)
 
 # Simulate outbreak -------------------------------------------------------
 
-linelist <- sim_linelist()
+line_list <- simulist::sim_linelist() %>% 
+  # to tibble for tidier printing
+  tibble::as_tibble()
 
-# optionally run commented out code below to can convert
-# to tibble for tidier printing
-# linelist <- tibble::as_tibble(linelist)
-
-linelist
+line_list
 
 # Create messy line list data ---------------------------------------------
 
-linelist <- messy(linelist)
+line_list <- simulist::messy_linelist(line_list)
 
 # convert some of the ages into words
-linelist$age <- english::words(as.numeric(linelist$age))
+line_list$age <- english::words(as.numeric(line_list$age))
 
-linelist
+line_list
 
 # Tag line list of data validation ----------------------------------------
 
@@ -45,92 +43,115 @@ linelist::tags_names()
 
 # in this case the tags have the same name but line list columns can be
 # named differently from the tag names
-linelist <- linelist::make_linelist(
-  x = linelist,
+line_list <- linelist::make_linelist(
+  x = line_list,
   date_onset = "date_onset",
   date_admission = "date_admission",
   date_outcome = "date_outcome"
 )
-linelist
+line_list
 
 # line list can be validated using tags
 # this will error due to the line list being messy
-linelist::validate_linelist(linelist)
+linelist::validate_linelist(line_list)
 
 # Scan line list data for issues ------------------------------------------
 
-cleanepi::scan_data(linelist)
+cleanepi::scan_data(line_list)
 
-cleanepi::check_subject_ids(linelist, target_columns = "id", range = c(1, 350))
+cleanepi::check_subject_ids(line_list, target_columns = "id", range = c(1, 350))
 
 # Clean line list ---------------------------------------------------------
 
-linelist$age <- numberize::numberize(linelist$age)
-linelist$age
+line_list$age <- numberize::numberize(line_list$age)
+line_list$age
 
 # zeros need to be changed to NA (in discussion)
-linelist$age[linelist$age == 0L] <- NA
+line_list$age[line_list$age == 0L] <- NA
 
 # routine cleaning steps to tidy column names and remove duplicated rows
-clean_linelist <- linelist |>
-  cleanepi::standardize_column_names() |>
-  cleanepi::remove_constants() |>
+line_list <- line_list %>%
+  cleanepi::standardize_column_names() %>%
+  cleanepi::remove_constants() %>%
   cleanepi::remove_duplicates()
 
-date_columns <- colnames(linelist)[startsWith(colnames(linelist), "date_")]
-linelist <- linelist |>
+date_columns <- colnames(line_list)[startsWith(colnames(line_list), "date_")]
+line_list <- line_list %>%
   cleanepi::standardize_dates(target_columns = date_columns)
 
 
-# clean inconsistent sex using dictionary
-linelist |> cleanepi::clean_using_dictionary(
-  dictionary = data.frame())
+
+# clean inconsistent sex using dictionary ---------------------------------
+
+# Find inconsistencies
+line_list %>% count(sex)
+
+# Define dictionary
+dat_dictionary <- tibble::tribble(
+  ~options,  ~values,     ~grp, ~orders,
+  "1",   "male", "sex",      1L, 
+  "2", "female", "sex",      2L,
+  "M",   "male", "sex",      3L,
+  "F", "female", "sex",      4L,
+  "m",   "male", "sex",      5L,
+  "f", "female", "sex",      6L
+)
+
+# Apply dictionary
+line_list_dict <- line_list %>% 
+  cleanepi::clean_using_dictionary(
+    dictionary = dat_dictionary
+  )
+
+# Very coverage of dictionary to solve the inconsistencies 
+line_list_dict %>% count(sex)
 
 # clean spelling mistakes using dictionary
-linelist$case_type[agrep(pattern = "suspected", x = linelist$case_type)] <- "suspected"
-linelist$case_type[agrep(pattern = "probable", x = linelist$case_type)] <- "probable"
-linelist$case_type[agrep(pattern = "confirmed", x = linelist$case_type)] <- "confirmed"
+line_list$case_type[agrep(pattern = "suspected", x = line_list$case_type)] <- "suspected"
+line_list$case_type[agrep(pattern = "probable", x = line_list$case_type)] <- "probable"
+line_list$case_type[agrep(pattern = "confirmed", x = line_list$case_type)] <- "confirmed"
 
-linelist$outcome[agrep(pattern = "recovered", x = linelist$outcome)] <- "recovered"
-linelist$outcome[agrep(pattern = "died", x = linelist$outcome)] <- "died"
+line_list$outcome[agrep(pattern = "recovered", x = line_list$outcome)] <- "recovered"
+line_list$outcome[agrep(pattern = "died", x = line_list$outcome)] <- "died"
 
 # Validate clean line list ------------------------------------------------
 
 # line list is now valid after cleaning
-linelist::validate_linelist(linelist)
+line_list_validated <- linelist::validate_linelist(line_list)
 
+# Now, get data frame with tagged columns only
+line_list_validated_tags <- linelist::tags_df(line_list_validated)
+
+line_list_validated_tags
 
 # Aggregate and visualise data --------------------------------------------
 
 # aggregate to daily incidence data
-daily <- incidence(x = linelist, date_index = "date_onset", interval = "daily", complete_dates = TRUE)
+daily <- incidence2::incidence(
+  x = line_list_validated_tags,
+  date_index = "date_onset",
+  interval = "daily",
+  complete_dates = TRUE
+)
+
 plot(daily)
 
 # aggregate to epiweek incidence data
-weekly <- incidence(x = linelist, date_index = "date_onset", interval = "epiweek", complete_dates = TRUE)
-plot(weekly)
-
-# transform line list to aggregate and plot onset, hospital admission and death
-linelist <- linelist |>
-  tidyr::pivot_wider(
-    names_from = outcome,
-    values_from = date_outcome
-  )
-linelist <- linelist |>
-  dplyr::rename(
-    date_death = died,
-    date_recovery = recovered
-  )
-
-# aggregate onset, admission and death
-weekly_chd <- incidence(
-  linelist,
-  date_index = c(
-    onset = "date_onset",
-    hospitalisation = "date_admission",
-    death = "date_death"
-  ),
+weekly <- incidence2::incidence(
+  x = line_list_validated_tags,
+  date_index = "date_onset",
   interval = "epiweek",
   complete_dates = TRUE
-)
+  )
+
+plot(weekly)
+
+# aggregate and plot onset, hospital admission and death
+weekly_chd <- line_list_validated_tags %>% 
+  incidence2::incidence(
+    date_index = c("date_onset","date_admission","date_outcome"),
+    interval = "epiweek",
+    complete_dates = TRUE
+  )
+
 plot(weekly_chd)
