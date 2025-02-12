@@ -239,16 +239,16 @@ head(outbreak_size3)
 
 ggplot2::ggplot(data = outbreak_size3) +
   ggplot2::geom_col(
-    mapping = ggplot2::aes(x = as.factor(disease), y = Freq, fill = interval)
+    mapping = ggplot2::aes(x = as.factor(disease_label), y = Freq, fill = interval)
   ) +
   ggplot2::scale_x_discrete(
-    name = "Disease", 
-    guide = ggplot2::guide_axis(n.dodge = 2)
+    name = "Disease"
   ) +
   ggplot2::scale_y_continuous(name = "Proportion of outbreaks") +
   ggplot2::scale_fill_brewer(
     name = "Outbreak size", 
     palette = "Spectral"
   ) + 
+  coord_flip() +
   ggplot2::theme_bw()
 
