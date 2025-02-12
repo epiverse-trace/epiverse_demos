@@ -150,6 +150,6 @@ infection_estimates$plots$infections +
 
 #' Further exploration
 
-#' - Explore the following priors on the Gaussian process and observe what changes in the output:
+#' - In EpiNow2::epinow(), explore the following priors on the Gaussian process and observe what changes in the output:
 #'    - alpha: gp = gp_opts(alpha = Normal(0, 0.05))
 #'    - length scale: gp = gp_opts(ls = LogNormal(mean = 14, sd = 7))
