@@ -57,7 +57,7 @@ for (i in seq_len(nrow(scenarios))) {
   outbreak_size_list[[i]]$statistic <- scenarios[i, "statistic"]
 }
 outbreak_size1 <- do.call(rbind, outbreak_size_list)
-head(outbreak_size)
+head(outbreak_size1)
 
 # Plot outbreak size distribution -----------------------------------------
 
@@ -161,7 +161,7 @@ for (i in seq_len(nrow(scenarios))) {
   outbreak_size_list[[i]]$statistic <- scenarios[i, "statistic"]
 }
 outbreak_size2 <- do.call(rbind, outbreak_size_list)
-head(outbreak_size)
+head(outbreak_size2)
 
 # Plot outbreak size distribution (Negative binomial) ---------------------
 
@@ -233,7 +233,7 @@ outbreak_size3 <- outbreak_size3 |>
     # Create a label combining R and k for each disease
     disease_label = paste0(disease, "\n(R=", R, ", k=", k, ")")
   )
-head(outbreak_size)
+head(outbreak_size3)
 
 # Plot empirical outbreak sizes -------------------------------------------
 
