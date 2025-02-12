@@ -98,13 +98,13 @@ dat_dictionary <- tibble::tribble(
 )
 
 # Apply dictionary
-line_list_dict <- line_list %>% 
+line_list <- line_list %>% 
   cleanepi::clean_using_dictionary(
     dictionary = dat_dictionary
   )
 
 # Very coverage of dictionary to solve the inconsistencies 
-line_list_dict %>% count(sex)
+line_list %>% count(sex)
 
 # clean spelling mistakes using dictionary
 line_list$case_type[agrep(pattern = "suspected", x = line_list$case_type)] <- "suspected"
