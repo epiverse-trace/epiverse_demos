@@ -56,12 +56,12 @@ for (i in seq_len(nrow(scenarios))) {
   outbreak_size_list[[i]]$offspring_dist <- scenarios[i, "offspring_dist"]
   outbreak_size_list[[i]]$statistic <- scenarios[i, "statistic"]
 }
-outbreak_size <- do.call(rbind, outbreak_size_list)
+outbreak_size1 <- do.call(rbind, outbreak_size_list)
 head(outbreak_size)
 
 # Plot outbreak size distribution -----------------------------------------
 
-ggplot2::ggplot(data = outbreak_size) +
+ggplot2::ggplot(data = outbreak_size1) +
   ggplot2::geom_col(
     mapping = ggplot2::aes(x = as.factor(R), y = Freq, fill = interval)
   ) +
@@ -160,12 +160,12 @@ for (i in seq_len(nrow(scenarios))) {
   outbreak_size_list[[i]]$offspring_dist <- scenarios[i, "offspring_dist"]
   outbreak_size_list[[i]]$statistic <- scenarios[i, "statistic"]
 }
-outbreak_size <- do.call(rbind, outbreak_size_list)
+outbreak_size2 <- do.call(rbind, outbreak_size_list)
 head(outbreak_size)
 
 # Plot outbreak size distribution (Negative binomial) ---------------------
 
-ggplot2::ggplot(data = outbreak_size) +
+ggplot2::ggplot(data = outbreak_size2) +
   ggplot2::geom_col(
     mapping = ggplot2::aes(x = as.factor(R), y = Freq, fill = interval)
   ) +
@@ -224,12 +224,20 @@ for (i in seq_along(offspring_dists)) {
   outbreak_size_list[[i]]$disease <- diseases[i]
   outbreak_size_list[[i]]$statistic <- "size"
 }
-outbreak_size <- do.call(rbind, outbreak_size_list)
+outbreak_size3 <- do.call(rbind, outbreak_size_list)
+
+outbreak_size3 <- outbreak_size3 |>
+  dplyr::mutate(
+    disease = stringr::str_remove(disease, "\\.\\d+$"),
+    interval = factor(interval, levels = unique(interval)),  # preserve order
+    # Create a label combining R and k for each disease
+    disease_label = paste0(disease, "\n(R=", R, ", k=", k, ")")
+  )
 head(outbreak_size)
 
 # Plot empirical outbreak sizes -------------------------------------------
 
-ggplot2::ggplot(data = outbreak_size) +
+ggplot2::ggplot(data = outbreak_size3) +
   ggplot2::geom_col(
     mapping = ggplot2::aes(x = as.factor(disease), y = Freq, fill = interval)
   ) +
