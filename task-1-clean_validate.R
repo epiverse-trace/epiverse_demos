@@ -11,7 +11,6 @@ library(cleanepi)
 library(numberize)
 library(incidence2)
 library(tibble)
-library(english)
 library(tidyr)
 library(dplyr)
 
