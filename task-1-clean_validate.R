@@ -56,12 +56,15 @@ linelist::validate_linelist(line_list)
 
 cleanepi::scan_data(line_list)
 
-cleanepi::check_subject_ids(line_list, target_columns = "id", range = c(1, 350))
-
 # Clean line list ---------------------------------------------------------
 
 line_list$age <- numberize::numberize(line_list$age)
 line_list$age
+
+line_list$id <- numberize::numberize(line_list$id)
+line_list$id
+
+cleanepi::check_subject_ids(line_list, target_columns = "id", range = c(1, 350))
 
 # routine cleaning steps to tidy column names and remove duplicated rows
 line_list <- line_list %>%
