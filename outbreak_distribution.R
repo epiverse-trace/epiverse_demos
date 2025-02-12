@@ -190,7 +190,7 @@ offspring_dists <- epiparameter::epiparameter_db(
 
 # Check all empirical distributions are the same --------------------------
 
-vapply(offspring_dists, family, FUN.VALUE = character(1))
+length(unique(vapply(offspring_dists, family, FUN.VALUE = character(1)))) == 1
 
 # Simulate empirical outbreak size distributions --------------------------
 
