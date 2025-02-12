@@ -33,11 +33,6 @@ line_list <- simulist::messy_linelist(line_list)
 
 line_list
 
-# convert some of the ages into words
-line_list$age <- english::words(as.numeric(line_list$age))
-
-line_list
-
 # Tag line list of data validation ----------------------------------------
 
 # see what tags are available
