@@ -36,7 +36,9 @@ breaks <- c(0, 2, 5, 10, 20, 50, 100, Inf)
 
 outbreak_list <- vector(mode = "list", length = nrow(scenarios))
 for (i in seq_len(nrow(scenarios))) {
+  
   offspring_dist_fun <- match.fun(scenarios[i, "offspring_dist"])
+  
   outbreak_list[[i]] <- epichains::simulate_chain_stats(
     n_chains = n_chains, 
     statistic = scenarios[i, "statistic"], 
@@ -81,7 +83,9 @@ scenarios$statistic <- "length"
 
 outbreak_list <- vector(mode = "list", length = nrow(scenarios))
 for (i in seq_len(nrow(scenarios))) {
+  
   offspring_dist_fun <- match.fun(scenarios[i, "offspring_dist"])
+  
   outbreak_list[[i]] <- epichains::simulate_chain_stats(
     n_chains = n_chains, 
     statistic = scenarios[i, "statistic"], 
@@ -138,7 +142,9 @@ scenarios <- expand.grid(
 
 outbreak_list <- vector(mode = "list", length = nrow(scenarios))
 for (i in seq_len(nrow(scenarios))) {
+  
   offspring_dist_fun <- match.fun(scenarios[i, "offspring_dist"])
+  
   outbreak_list[[i]] <- epichains::simulate_chain_stats(
     n_chains = n_chains, 
     statistic = scenarios[i, "statistic"], 
@@ -196,7 +202,9 @@ length(unique(vapply(offspring_dists, family, FUN.VALUE = character(1)))) == 1
 
 outbreak_list <- vector(mode = "list", length = length(offspring_dists))
 for (i in seq_along(offspring_dists)) {
+  
   offspring_dist_fun <- match.fun(paste0("r", family(offspring_dists[[i]])))
+  
   outbreak_list[[i]] <- epichains::simulate_chain_stats(
     n_chains = n_chains, 
     statistic = "size", 
