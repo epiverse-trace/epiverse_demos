@@ -7,7 +7,7 @@
 # Load packages
 library(finalsize)
 library(socialmixr)
-library(ggplot2)
+library(tidyverse)
 
 
 # Simple quick calculation with homogenous mixing -------------------------------------------
@@ -71,3 +71,17 @@ output <- finalsize::final_size(
   susceptibility = susc_uniform,
   p_susceptibility = p_susc_uniform
 )
+
+output
+
+output %>% 
+  mutate(demo_grp = as_factor(demo_grp)) %>% 
+  ggplot(aes(x = demo_grp, y = p_infected)) +
+  geom_col() +
+  ylim(0,1) +
+  labs(
+    x = "Age group",
+    y = "Proportion infected",
+    title = "Final size of an SIR epidemic",
+    subtitle = "Fully susceptible population"
+  )
