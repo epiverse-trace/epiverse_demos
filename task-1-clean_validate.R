@@ -20,6 +20,7 @@ set.seed(1)
 
 # Simulate outbreak -------------------------------------------------------
 
+# see {simulist} website: https://epiverse-trace.github.io/simulist/
 line_list <- simulist::sim_linelist() %>% 
   # to tibble for tidier printing
   tibble::as_tibble()
@@ -34,6 +35,7 @@ line_list
 
 # Tag line list of data validation ----------------------------------------
 
+# see {linelist} website: https://epiverse-trace.github.io/linelist/
 # see what tags are available
 linelist::tags_names()
 
@@ -53,10 +55,12 @@ linelist::validate_linelist(line_list)
 
 # Scan line list data for issues ------------------------------------------
 
+# see {cleanepi} website: https://epiverse-trace.github.io/cleanepi/
 cleanepi::scan_data(line_list)
 
 # Clean line list ---------------------------------------------------------
 
+# see {numberize} webiste: https://epiverse-trace.github.io/numberize/
 line_list$age <- numberize::numberize(line_list$age)
 line_list$age
 
@@ -122,6 +126,7 @@ line_list_validated_tags
 
 # Aggregate and visualise data --------------------------------------------
 
+# see visualising line list data vignette: https://epiverse-trace.github.io/simulist/articles/vis-linelist.html
 # aggregate to daily incidence data
 daily <- incidence2::incidence(
   x = line_list_validated_tags,
