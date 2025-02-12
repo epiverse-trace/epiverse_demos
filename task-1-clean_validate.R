@@ -63,9 +63,6 @@ cleanepi::check_subject_ids(line_list, target_columns = "id", range = c(1, 350))
 line_list$age <- numberize::numberize(line_list$age)
 line_list$age
 
-# zeros need to be changed to NA (in discussion)
-line_list$age[line_list$age == 0L] <- NA
-
 # routine cleaning steps to tidy column names and remove duplicated rows
 line_list <- line_list %>%
   cleanepi::standardize_column_names() %>%
