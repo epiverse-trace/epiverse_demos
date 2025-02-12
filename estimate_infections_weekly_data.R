@@ -89,6 +89,7 @@ estimates_epinow <- EpiNow2::epinow(
     prior = Gamma(mean = 5, sd = 5) # same prior as used in EpiEstim default
   ),
   CrIs = c(0.025, 0.05, 0.25, 0.75, 0.95, 0.975), # same prior as used in EpiEstim default
+  stan = EpiNow2::stan_opts(samples = 1000, chains = 2), # revert to 4 chains for better inference
   verbose = FALSE
 )
 
