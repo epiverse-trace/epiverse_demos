@@ -29,7 +29,7 @@ line_list
 
 # Create messy line list data ---------------------------------------------
 
-line_list <- simulist::messy_linelist(line_list)
+line_list <- simulist::messy_linelist(line_list, inconsistent_dates = TRUE)
 
 line_list
 
