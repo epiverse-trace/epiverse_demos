@@ -1,0 +1,246 @@
+# HPRU script
+
+## Outbreak distribution size
+
+
+# Load required packages --------------------------------------------------
+
+library(epichains)
+library(ggplot2)
+library(epiparameter)
+
+# Choose a seed so results are reproducible -------------------------------
+
+set.seed(1)
+
+# Define outbreak parameter space -----------------------------------------
+
+statistic <- "size"
+offspring_dist <- "rpois"
+R <- seq(0.1, 1.0, 0.1)
+
+scenarios <- expand.grid(
+  offspring_dist = offspring_dist,
+  statistic = statistic,
+  R = R,
+  stringsAsFactors = FALSE
+)
+
+# number of simulations to run
+n_chains <- 1000
+
+# outbreak size groupings
+breaks <- c(0, 2, 5, 10, 20, 50, 100, Inf)
+
+# Simulate outbreak size distribution (Poisson) ---------------------------
+
+outbreak_list <- vector(mode = "list", length = nrow(scenarios))
+for (i in seq_len(nrow(scenarios))) {
+  offspring_dist_fun <- match.fun(scenarios[i, "offspring_dist"])
+  outbreak_list[[i]] <- epichains::simulate_chain_stats(
+    n_chains = n_chains, 
+    statistic = scenarios[i, "statistic"], 
+    offspring_dist = offspring_dist_fun,
+    lambda = scenarios[i, "R"],
+    stat_threshold = breaks[length(breaks) - 1] + 1
+  )
+}
+
+# Group outbreak sizes ----------------------------------------------------
+
+intervals <- lapply(outbreak_list, cut, breaks = breaks)
+prop <- lapply(intervals, function(interval) table(interval) / sum(table(interval)))
+outbreak_size_list <- lapply(prop, as.data.frame)
+for (i in seq_len(nrow(scenarios))) {
+  outbreak_size_list[[i]]$R <- scenarios[i, "R"]
+  outbreak_size_list[[i]]$offspring_dist <- scenarios[i, "offspring_dist"]
+  outbreak_size_list[[i]]$statistic <- scenarios[i, "statistic"]
+}
+outbreak_size <- do.call(rbind, outbreak_size_list)
+head(outbreak_size)
+
+# Plot outbreak size distribution -----------------------------------------
+
+ggplot2::ggplot(data = outbreak_size) +
+  ggplot2::geom_col(
+    mapping = ggplot2::aes(x = as.factor(R), y = Freq, fill = interval)
+  ) +
+  ggplot2::scale_x_discrete(name = "Reproduction number (R)") +
+  ggplot2::scale_y_continuous(name = "Proportion of outbreaks") +
+  ggplot2::scale_fill_brewer(
+    name = "Outbreak size", 
+    palette = "Spectral"
+  ) + 
+  ggplot2::theme_bw()
+
+# Change transmission chain statistic to length ---------------------------
+
+scenarios$statistic <- "length"
+
+# Simulate outbreak length distribution -----------------------------------
+
+outbreak_list <- vector(mode = "list", length = nrow(scenarios))
+for (i in seq_len(nrow(scenarios))) {
+  offspring_dist_fun <- match.fun(scenarios[i, "offspring_dist"])
+  outbreak_list[[i]] <- epichains::simulate_chain_stats(
+    n_chains = n_chains, 
+    statistic = scenarios[i, "statistic"], 
+    offspring_dist = offspring_dist_fun,
+    lambda = scenarios[i, "R"],
+    stat_threshold = breaks[length(breaks) - 1] + 1
+  )
+}
+
+# Group outbreak lengths --------------------------------------------------
+
+intervals <- lapply(outbreak_list, cut, breaks = breaks)
+prop <- lapply(intervals, function(interval) table(interval) / sum(table(interval)))
+outbreak_length_list <- lapply(prop, as.data.frame)
+for (i in seq_len(nrow(scenarios))) {
+  outbreak_length_list[[i]]$R <- scenarios[i, "R"]
+  outbreak_length_list[[i]]$offspring_dist <- scenarios[i, "offspring_dist"]
+  outbreak_length_list[[i]]$statistic <- scenarios[i, "statistic"]
+}
+outbreak_length <- do.call(rbind, outbreak_length_list)
+head(outbreak_length)
+
+# Plot outbreak length distribution ---------------------------------------
+
+ggplot2::ggplot(data = outbreak_length) +
+  ggplot2::geom_col(
+    mapping = ggplot2::aes(x = as.factor(R), y = Freq, fill = interval)
+  ) +
+  ggplot2::scale_x_discrete(name = "Reproduction number (R)") +
+  ggplot2::scale_y_continuous(name = "Proportion of outbreaks") +
+  ggplot2::scale_fill_brewer(
+    name = "Outbreak length", 
+    palette = "Spectral"
+  ) + 
+  ggplot2::theme_bw()
+
+
+# Change offspring distribution to Negative binomial ----------------------
+
+statistic <- "size"
+offspring_dist <- "rnbinom"
+R <- seq(0.1, 1.0, 0.1)
+k <- c(0.1, 5, 10, 1000)
+
+scenarios <- expand.grid(
+  offspring_dist = offspring_dist,
+  statistic = statistic,
+  R = R,
+  k = k,
+  stringsAsFactors = FALSE
+)
+
+# Simulate outbreak size distribution (Negative binomial) -----------------
+
+outbreak_list <- vector(mode = "list", length = nrow(scenarios))
+for (i in seq_len(nrow(scenarios))) {
+  offspring_dist_fun <- match.fun(scenarios[i, "offspring_dist"])
+  outbreak_list[[i]] <- epichains::simulate_chain_stats(
+    n_chains = n_chains, 
+    statistic = scenarios[i, "statistic"], 
+    offspring_dist = offspring_dist_fun,
+    mu = scenarios[i, "R"],
+    size = scenarios[i, "k"],
+    stat_threshold = breaks[length(breaks) - 1] + 1
+  )
+}
+
+# Group outbreak sizes ----------------------------------------------------
+
+intervals <- lapply(outbreak_list, cut, breaks = breaks)
+prop <- lapply(intervals, function(interval) table(interval) / sum(table(interval)))
+outbreak_size_list <- lapply(prop, as.data.frame)
+for (i in seq_len(nrow(scenarios))) {
+  outbreak_size_list[[i]]$R <- scenarios[i, "R"]
+  outbreak_size_list[[i]]$k <- scenarios[i, "k"]
+  outbreak_size_list[[i]]$offspring_dist <- scenarios[i, "offspring_dist"]
+  outbreak_size_list[[i]]$statistic <- scenarios[i, "statistic"]
+}
+outbreak_size <- do.call(rbind, outbreak_size_list)
+head(outbreak_size)
+
+# Plot outbreak size distribution (Negative binomial) ---------------------
+
+ggplot2::ggplot(data = outbreak_size) +
+  ggplot2::geom_col(
+    mapping = ggplot2::aes(x = as.factor(R), y = Freq, fill = interval)
+  ) +
+  ggplot2::scale_x_discrete(name = "Reproduction number (R)") +
+  ggplot2::scale_y_continuous(name = "Proportion of outbreaks") +
+  ggplot2::scale_fill_brewer(
+    name = "Outbreak size", 
+    palette = "Spectral"
+  ) + 
+  ggplot2::facet_wrap(
+    facets = c("k"), 
+    labeller = ggplot2::label_both
+  ) +
+  ggplot2::theme_bw()
+
+
+# Simulating outbreak sizes for past outbreaks ----------------------------
+
+offspring_dists <- epiparameter::epiparameter_db(
+  epi_name = "offspring distribution"
+)
+
+# Check all empirical distributions are the same --------------------------
+
+vapply(offspring_dists, family, FUN.VALUE = character(1))
+
+# Simulate empirical outbreak size distributions --------------------------
+
+outbreak_list <- vector(mode = "list", length = length(offspring_dists))
+for (i in seq_along(offspring_dists)) {
+  offspring_dist_fun <- match.fun(paste0("r", family(offspring_dists[[i]])))
+  outbreak_list[[i]] <- epichains::simulate_chain_stats(
+    n_chains = n_chains, 
+    statistic = "size", 
+    offspring_dist = offspring_dist_fun,
+    mu = get_parameters(offspring_dists[[i]])[["mean"]],
+    size = get_parameters(offspring_dists[[i]])[["dispersion"]],
+    stat_threshold = breaks[length(breaks) - 1] + 1
+  )
+}
+
+# Group outbreak sizes ----------------------------------------------------
+
+# paste suffix as some diseases have multiple offspring distributions
+diseases <- make.unique(
+  vapply(offspring_dists, `[[`, FUN.VALUE = character(1), "disease")
+)
+
+intervals <- lapply(outbreak_list, cut, breaks = breaks)
+prop <- lapply(intervals, function(interval) table(interval) / sum(table(interval)))
+outbreak_size_list <- lapply(prop, as.data.frame)
+for (i in seq_along(offspring_dists)) {
+  outbreak_size_list[[i]]$R <- get_parameters(offspring_dists[[i]])[["mean"]]
+  outbreak_size_list[[i]]$k <- get_parameters(offspring_dists[[i]])[["dispersion"]]
+  outbreak_size_list[[i]]$offspring_dist <- family(offspring_dists[[i]])
+  outbreak_size_list[[i]]$disease <- diseases[i]
+  outbreak_size_list[[i]]$statistic <- "size"
+}
+outbreak_size <- do.call(rbind, outbreak_size_list)
+head(outbreak_size)
+
+# Plot empirical outbreak sizes -------------------------------------------
+
+ggplot2::ggplot(data = outbreak_size) +
+  ggplot2::geom_col(
+    mapping = ggplot2::aes(x = as.factor(disease), y = Freq, fill = interval)
+  ) +
+  ggplot2::scale_x_discrete(
+    name = "Disease", 
+    guide = ggplot2::guide_axis(n.dodge = 2)
+  ) +
+  ggplot2::scale_y_continuous(name = "Proportion of outbreaks") +
+  ggplot2::scale_fill_brewer(
+    name = "Outbreak size", 
+    palette = "Spectral"
+  ) + 
+  ggplot2::theme_bw()
+
