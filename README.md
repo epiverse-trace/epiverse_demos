@@ -41,11 +41,6 @@ Contributions are always welcome!
 In the [GitHub repository](https://github.com/epiverse-trace/epiverse_demos), 
 fill issues or fork the repository to create a Pull Request. 
 
-<!--
-See `contributing.md` for ways to get started.
-
-Please adhere to this project's `code of conduct`.
--->
 
 ## Installation
 
@@ -56,3 +51,4 @@ Please adhere to this project's `code of conduct`.
 if(!require("renv")) install.packages("renv")
 renv::restore()
 ```
+
