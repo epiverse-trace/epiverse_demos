@@ -1,38 +1,30 @@
 # epiverse_demos
 
-A project to demonstrate how to solve outbreak analytic tasks
-open-source packages from the 
+A project to demonstrate how to solve outbreak analytics tasks
+using open-source packages from the 
 [Epiverse-TRACE](https://epiverse-trace.github.io/),
 [Epiforecasts](https://epiforecasts.io/), 
 [Reconverse](https://www.reconverse.org/),
 and [R Epidemics Consortium](https://www.repidemicsconsortium.org/projects/)
 toolkits.
 
-
-## Badges
-
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-
-
-## Installation
-
-1. Clone the repository: <https://github.com/epiverse-trace/epiverse_demos>
-2. Restore the R environment running:
-
-```r
-if(!require("renv")) install.packages("renv")
-renv::restore()
-```
-    
 ## Usage
 
-2. Open any `task-...` R file in root.
-3. Run the content to explore how a set of task are coded to solve an end goal.
-
-
-## Data
+1. Open any `task-...` R file in root.
+2. Run the content to explore how a set of task are coded to solve an end goal.
 
 All data is simulated or stored within R packages.
+
+
+## Posit Cloud
+
+To keep record of your edits or notes,
+Click on **Save a Permanent Copy**.
+
+
+## Support
+
+Join the [Discussions on GitHub](https://github.com/orgs/epiverse-trace/discussions).
 
 
 ## License
@@ -44,7 +36,8 @@ All data is simulated or stored within R packages.
 
 Contributions are always welcome!
 
-On GitHub, fill issues or fork the repository to create a Pull Request. 
+In the [GitHub repository](https://github.com/epiverse-trace/epiverse_demos), 
+fill issues or fork the repository to create a Pull Request. 
 
 <!--
 See `contributing.md` for ways to get started.
@@ -52,6 +45,12 @@ See `contributing.md` for ways to get started.
 Please adhere to this project's `code of conduct`.
 -->
 
-## Support
+## Installation
 
-For support, join the [Discussions on GitHub](https://github.com/orgs/epiverse-trace/discussions).
+1. Fork and clone the repository: <https://github.com/epiverse-trace/epiverse_demos>
+2. Restore the R environment running:
+
+```r
+if(!require("renv")) install.packages("renv")
+renv::restore()
+```
