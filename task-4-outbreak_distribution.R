@@ -1,7 +1,9 @@
 # HPRU script
 
 ## Outbreak distribution size
-
+# This script builds on the concepts outlined in these vignettes:
+# https://epiverse-trace.github.io/epichains/articles/epichains.html
+# https://epiverse-trace.github.io/epichains/articles/projecting_incidence.html
 
 # Load required packages --------------------------------------------------
 
