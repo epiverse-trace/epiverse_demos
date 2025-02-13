@@ -4,8 +4,8 @@ A project to demonstrate how to solve outbreak analytics tasks
 using open-source packages from the 
 [Epiverse-TRACE](https://epiverse-trace.github.io/),
 [Epiforecasts](https://epiforecasts.io/), 
-[Reconverse](https://www.reconverse.org/),
-and [R Epidemics Consortium](https://www.repidemicsconsortium.org/projects/)
+[Reconverse](https://www.reconverse.org/), and
+[R Epidemics Consortium](https://www.repidemicsconsortium.org/projects/)
 toolkits.
 
 ## Usage
