@@ -1,6 +1,9 @@
 # HPRU workshop script
 
 ## Transmission clusters and superspreading events
+# This script builds on the concepts outlined in these vignettes:
+# https://epiverse-trace.github.io/superspreading/articles/epidemic_risk.html
+# https://epiverse-trace.github.io/superspreading/articles/proportion_transmission.html
 
 # Load required R packages ------------------------------------------------
 
