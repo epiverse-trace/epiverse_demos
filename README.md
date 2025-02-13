@@ -18,6 +18,8 @@ All data is simulated or stored within R packages.
 
 ## Posit Cloud
 
+The Posit Cloud already have all packages and dependencies installed. 
+
 To keep record of your edits or notes,
 Click on **Save a Permanent Copy**.
 
