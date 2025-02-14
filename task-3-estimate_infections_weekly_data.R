@@ -228,7 +228,8 @@ rt_plot <- ggplot() +
 plot(rt_plot)
 
 #' Further exploration
-
+#' - Now run EpiNow2::epinow() with a delay by adding the following argument. Note what you observe:
+#'    - delay = delay_opts(incubation_lognormal)
 #' - Explore different Rt priors:
 #'    - For EpiEstim::estimate_R(), use the create_config() function
 #'    - For EpiNow2::epinow(), pass the EpiNow2 distribution to rt_opts() as
