@@ -8,6 +8,10 @@ using open-source packages from the
 [R Epidemics Consortium](https://www.repidemicsconsortium.org/projects/)
 toolkits.
 
+> [!NOTE]
+> These entries are now hosted and maintained in the
+> how-to guides repository at: <https://epiverse-trace.github.io/howto/>
+
 ## Usage
 
 1. Open any `task-...` R file in root.
