@@ -10,7 +10,8 @@ toolkits.
 
 > [!NOTE]
 > These entries are now hosted and maintained in the
-> how-to guides repository at: <https://epiverse-trace.github.io/howto/>
+> **How-to Guides** repository of the Epiverse-TRACE organisation.
+> You can access them at: <https://epiverse-trace.github.io/howto/>
 
 ## Usage
 
