@@ -2,15 +2,17 @@
 # with heterogeneous social contacts
 # This script builds this vignette:
 # https://epiverse-trace.github.io/finalsize/articles/varying_contacts.html
+# now maintained in
+# how-to guide: https://epiverse-trace.github.io/howto/analyses/simulate_transmission/finalsize-attack-rate-heterogeneity.html
 
 
-# Load packages
+# Load packages --------------------------------------------------------------------
 library(finalsize)
 library(socialmixr)
 library(tidyverse)
 
 
-# Simple quick calculation with homogenous mixing -------------------------------------------
+# Simple quick calculation with homogenous mixing ----------------------------------
 r0_input <- 2
 finalsize::final_size(r0 = r0_input)
 

@@ -4,6 +4,8 @@
 # This script builds on the concepts outlined in these vignettes:
 # https://epiverse-trace.github.io/superspreading/articles/epidemic_risk.html
 # https://epiverse-trace.github.io/superspreading/articles/proportion_transmission.html
+# currently maintained in
+# how-to guide: https://epiverse-trace.github.io/howto/analyses/simulate_transmission/superspreading-probability-extintion.html
 
 # Load required R packages ------------------------------------------------
 
@@ -38,12 +40,12 @@ contact_net <- epicontacts::make_epicontacts(
   directed = TRUE
 )
 
-plot(contact_net)
+# plot(contact_net)
 
 
 # Plot transmission network -----------------------------------------------
 
-transmission_net <- outbreak$contacts[outbreak$contacts$was_case == "Y", ]
+transmission_net <- outbreak$contacts[outbreak$contacts$was_case == TRUE, ]
 
 transmission_net <- epicontacts::make_epicontacts(
   linelist = outbreak$linelist,
@@ -54,6 +56,8 @@ transmission_net <- epicontacts::make_epicontacts(
   directed = TRUE
 )
 
+transmission_net
+
 plot(transmission_net)
 
 # Extract secondary case data from outbreak -------------------------------
@@ -61,7 +65,7 @@ plot(transmission_net)
 contacts <- outbreak$contacts
 
 # subset to contacts that caused transmission
-infections <- contacts[contacts$was_case == "Y", ]
+infections <- contacts[contacts$was_case == TRUE, ]
 
 # Tabulate number of infections from each infector
 secondary_cases <- table(infections$from)
@@ -121,8 +125,8 @@ superspreading::proportion_cluster_size(
 
 superspreading::proportion_transmission(
   R = R, 
-  k = k, 
-  percent_transmission = 0.8
+  k = k,
+  prop_transmission = 0.8
 )
 
 # Estimate probability of outbreak extinction -----------------------------

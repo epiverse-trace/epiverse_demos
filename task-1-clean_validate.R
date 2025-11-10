@@ -1,11 +1,11 @@
 # HPRU workshop script
 
 ## Clean and validate and plot outbreak data
+# maintained in
+# how-to guide: https://epiverse-trace.github.io/howto/analyses/describe_cases/simulist-cleanepi-messy-data.html
 
 # Load required R packages ------------------------------------------------
 
-# {simulist} needs to be installed from a feature branch for now
-# remotes::install_github("epiverse-trace/simulist@messy")
 library(simulist)
 library(cleanepi)
 library(numberize)
@@ -47,11 +47,12 @@ line_list <- linelist::make_linelist(
   date_admission = "date_admission",
   date_outcome = "date_outcome"
 )
+
 line_list
 
 # line list can be validated using tags
 # this will error due to the line list being messy
-linelist::validate_linelist(line_list)
+# linelist::validate_linelist(line_list)
 
 # Scan line list data for issues ------------------------------------------
 
@@ -67,7 +68,7 @@ line_list$age
 line_list$id <- numberize::numberize(line_list$id)
 line_list$id
 
-cleanepi::check_subject_ids(line_list, target_columns = "id", range = c(1, 350))
+cleanepi::check_subject_ids(line_list, target_columns = "id", range = c(1, nrow(line_list)))
 
 # routine cleaning steps to tidy column names and remove duplicated rows
 line_list <- line_list %>%
@@ -76,6 +77,7 @@ line_list <- line_list %>%
   cleanepi::remove_duplicates()
 
 date_columns <- colnames(line_list)[startsWith(colnames(line_list), "date_")]
+
 line_list <- line_list %>%
   cleanepi::standardize_dates(target_columns = date_columns)
 
@@ -97,11 +99,11 @@ dat_dictionary <- tibble::tribble(
   "f", "female", "sex",      6L
 )
 
-# Apply dictionary
-line_list <- line_list %>% 
-  cleanepi::clean_using_dictionary(
-    dictionary = dat_dictionary
-  )
+# # Apply dictionary
+# line_list <- line_list %>% 
+#   cleanepi::clean_using_dictionary(
+#     dictionary = dat_dictionary
+#   )
 
 # Very coverage of dictionary to solve the inconsistencies 
 line_list %>% count(sex)
