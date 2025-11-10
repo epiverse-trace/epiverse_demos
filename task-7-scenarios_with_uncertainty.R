@@ -3,6 +3,8 @@
 # This script builds on the concepts outlined in these vignettes:
 # https://epiverse-trace.github.io/epidemics/articles/modelling_param_uncertainty.html
 # https://epiverse-trace.github.io/epidemics/articles/modelling_multiple_interventions.html
+# now maintained in
+# how-to guide: https://epiverse-trace.github.io/howto/analyses/simulate_transmission/epidemics-scenarios-uncertainty.html
 
 
 # Load packages
@@ -115,9 +117,9 @@ data <- dplyr::select(output, param_set, transmission_rate, data) %>%
   tidyr::unnest(new_infections)
 
 
-# Plot outputs ------------------------------------------------------------
+# Plot baseline ------------------------------------------------------------
 
-# plot the data
+# # plot the data
 data %>% 
   dplyr::filter() %>%
   ggplot() +
