@@ -13,6 +13,7 @@
 
 # Load necessary packages for analysis
 library(EpiNow2) # To estimate time-varying reproduction number
+library(EpiEstim) # To estimate time-varying reproduction number
 library(epiparameter) # To extract epidemiological parameters
 library(data.table) # For data manipulation
 library(parallel) # For parallel processing
@@ -124,7 +125,7 @@ estimates_epiestim <- EpiEstim::estimate_R(
   dt_out = 7L, # Estimation rolling window
   recon_opt = "naive",
   method = "parametric_si",
-  config = make_config(
+  config = EpiEstim::make_config(
     list(mean_si = si_mean, std_si = si_sd)
   )
 )

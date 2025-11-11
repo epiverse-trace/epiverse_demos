@@ -78,16 +78,16 @@
     },
     "EpiEstim": {
       "Package": "EpiEstim",
-      "Version": "2.2-5",
-      "Source": "Repository",
+      "Version": "2.4",
+      "Source": "GitHub",
       "Title": "Estimate Time Varying Reproduction Numbers from Epidemic Curves",
-      "Authors@R": "c(person(\"Anne\", \"Cori\", email = \"a.cori@imperial.ac.uk\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0002-8443-9162\")),  person(\"Simon\", \"Cauchemez\", role = \"ctb\"), person(\"Neil M.\", \"Ferguson\", role = \"ctb\", comment = c(ORCID = \"0000-0002-1154-8093\")), person(\"Christophe\", \"Fraser\", role = \"ctb\", comment = c(ORCID = \"0000-0003-2399-9657\")), person(\"Elisabeth\", \"Dahlqwist\", role = \"ctb\", comment = c(ORCID = \"0000-0001-5797-6803\")), person(\"P. Alex\", \"Demarsh\", role = \"ctb\"), person(\"Thibaut\", \"Jombart\", role = \"ctb\", comment = c(ORCID = \"0000-0003-2226-8692\")), person(\"Zhian N.\", \"Kamvar\", role = \"ctb\", comment = c(ORCID = \"0000-0003-1458-7108\")), person(\"Justin\", \"Lessler\", role = \"ctb\", comment = c(ORCID = \"0000-0002-9741-8109\")), person(\"Shikun\", \"Li\", role = \"ctb\"), person(\"Jonathan A.\", \"Polonsky\", role = \"ctb\", comment = c(ORCID = \"0000-0002-8634-4255\")), person(\"Jake\", \"Stockwin\", role = \"ctb\"), person(\"Robin\", \"Thompson\", role = \"ctb\", comment = c(ORCID = \"0000-0001-8545-5212\")), person(\"Rolina\", \"van Gaalen\", role = \"ctb\") )",
+      "Authors@R": "c(person(\"Anne\", \"Cori\", email = \"a.cori@imperial.ac.uk\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0002-8443-9162\")),  person(\"Simon\", \"Cauchemez\", role = \"ctb\"), person(\"Neil M.\", \"Ferguson\", role = \"ctb\", comment = c(ORCID = \"0000-0002-1154-8093\")), person(\"Christophe\", \"Fraser\", role = \"ctb\", comment = c(ORCID = \"0000-0003-2399-9657\")), person(\"Elisabeth\", \"Dahlqwist\", role = \"ctb\", comment = c(ORCID = \"0000-0001-5797-6803\")), person(\"P. Alex\", \"Demarsh\", role = \"ctb\"), person(\"Thibaut\", \"Jombart\", role = \"ctb\", comment = c(ORCID = \"0000-0003-2226-8692\")), person(\"Zhian N.\", \"Kamvar\", role = \"ctb\", comment = c(ORCID = \"0000-0003-1458-7108\")), person(\"Justin\", \"Lessler\", role = \"ctb\", comment = c(ORCID = \"0000-0002-9741-8109\")), person(\"Shikun\", \"Li\", role = \"ctb\"), person(\"Jonathan A.\", \"Polonsky\", role = \"ctb\", comment = c(ORCID = \"0000-0002-8634-4255\")), person(\"Jake\", \"Stockwin\", role = \"ctb\"), person(\"Robin\", \"Thompson\", role = \"ctb\", comment = c(ORCID = \"0000-0001-8545-5212\")), person(\"Rolina\", \"van Gaalen\", role = \"ctb\"), person(\"Rebecca\", \"Nash\", email = \"r.nash@imperial.ac.uk\", role = \"ctb\", comment = c(ORCID = \"0000-0002-5213-4364\")), person(\"Sangeeta\", \"Bhatia\", role = \"ctb\", comment = c(ORCID = \"0000-0001-6525-101X\")), person(\"Jack\", \"Wardle\", role = \"ctb\", comment = c(ORCID = \"0000-0002-5363-1653\")), person(\"Andrea\", \"Brizzi\", role = \"ctb\", comment = c(ORCID = \"0000-0002-5639-8260\")) )",
       "Maintainer": "Anne Cori <a.cori@imperial.ac.uk>",
       "Description": "Tools to quantify transmissibility throughout an epidemic from the analysis of time series of incidence as described in Cori et al. (2013) <doi:10.1093/aje/kwt133> and Wallinga and Teunis (2004)  <doi:10.1093/aje/kwh255>.",
       "URL": "https://github.com/mrc-ide/EpiEstim",
       "BugReports": "https://github.com/mrc-ide/EpiEstim/issues",
       "Depends": [
-        "R (>= 2.10)"
+        "R (>= 3.5.0)"
       ],
       "Imports": [
         "coarseDataTools (>= 0.6-4)",
@@ -100,7 +100,11 @@
         "coda",
         "incidence (>= 1.7.0)",
         "scales",
-        "grDevices"
+        "grDevices",
+        "abind",
+        "epitrix",
+        "distcrete",
+        "patchwork (>= 1.2.0)"
       ],
       "Suggests": [
         "testthat",
@@ -108,16 +112,29 @@
         "vdiffr",
         "covr",
         "knitr",
-        "rmarkdown"
+        "rmarkdown",
+        "kableExtra",
+        "hrbrthemes",
+        "MCMCglmm",
+        "projections",
+        "dplyr",
+        "readxl",
+        "gghighlight"
       ],
-      "License": "GPL (>= 2)",
+      "License": "GPL (>=2)",
       "LazyLoad": "yes",
       "Encoding": "UTF-8",
       "RoxygenNote": "7.3.2",
       "VignetteBuilder": "knitr",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "EpiEstim",
+      "RemoteUsername": "mrc-ide",
+      "RemotePkgRef": "mrc-ide/EpiEstim",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "0b50c55a2ed12ef935690647ee2acc81f27aa7fb",
       "NeedsCompilation": "no",
-      "Author": "Anne Cori [aut, cre] (ORCID: <https://orcid.org/0000-0002-8443-9162>), Simon Cauchemez [ctb], Neil M. Ferguson [ctb] (ORCID: <https://orcid.org/0000-0002-1154-8093>), Christophe Fraser [ctb] (ORCID: <https://orcid.org/0000-0003-2399-9657>), Elisabeth Dahlqwist [ctb] (ORCID: <https://orcid.org/0000-0001-5797-6803>), P. Alex Demarsh [ctb], Thibaut Jombart [ctb] (ORCID: <https://orcid.org/0000-0003-2226-8692>), Zhian N. Kamvar [ctb] (ORCID: <https://orcid.org/0000-0003-1458-7108>), Justin Lessler [ctb] (ORCID: <https://orcid.org/0000-0002-9741-8109>), Shikun Li [ctb], Jonathan A. Polonsky [ctb] (ORCID: <https://orcid.org/0000-0002-8634-4255>), Jake Stockwin [ctb], Robin Thompson [ctb] (ORCID: <https://orcid.org/0000-0001-8545-5212>), Rolina van Gaalen [ctb]",
-      "Repository": "CRAN"
+      "Author": "Anne Cori [aut, cre] (ORCID: <https://orcid.org/0000-0002-8443-9162>), Simon Cauchemez [ctb], Neil M. Ferguson [ctb] (ORCID: <https://orcid.org/0000-0002-1154-8093>), Christophe Fraser [ctb] (ORCID: <https://orcid.org/0000-0003-2399-9657>), Elisabeth Dahlqwist [ctb] (ORCID: <https://orcid.org/0000-0001-5797-6803>), P. Alex Demarsh [ctb], Thibaut Jombart [ctb] (ORCID: <https://orcid.org/0000-0003-2226-8692>), Zhian N. Kamvar [ctb] (ORCID: <https://orcid.org/0000-0003-1458-7108>), Justin Lessler [ctb] (ORCID: <https://orcid.org/0000-0002-9741-8109>), Shikun Li [ctb], Jonathan A. Polonsky [ctb] (ORCID: <https://orcid.org/0000-0002-8634-4255>), Jake Stockwin [ctb], Robin Thompson [ctb] (ORCID: <https://orcid.org/0000-0001-8545-5212>), Rolina van Gaalen [ctb], Rebecca Nash [ctb] (ORCID: <https://orcid.org/0000-0002-5213-4364>), Sangeeta Bhatia [ctb] (ORCID: <https://orcid.org/0000-0001-6525-101X>), Jack Wardle [ctb] (ORCID: <https://orcid.org/0000-0002-5363-1653>), Andrea Brizzi [ctb] (ORCID: <https://orcid.org/0000-0002-5639-8260>)"
     },
     "EpiNow2": {
       "Package": "EpiNow2",
@@ -2318,6 +2335,49 @@
       "Author": "Joshua W. Lambert [cre, aut, cph] (<https://orcid.org/0000-0001-5218-3046>), Adam Kucharski [aut] (<https://orcid.org/0000-0001-8814-9421>), Carmen Tamayo [aut] (<https://orcid.org/0000-0003-4184-2864>)",
       "Maintainer": "Joshua W. Lambert <joshua.lambert@lshtm.ac.uk>",
       "Repository": "CRAN"
+    },
+    "epitrix": {
+      "Package": "epitrix",
+      "Version": "0.4.1",
+      "Source": "Repository",
+      "Title": "Small Helpers and Tricks for Epidemics Analysis",
+      "Authors@R": "c(person(\"Thibaut\", \"Jombart\", email = \"thibautjombart@gmail.com\", role = c(\"aut\", \"cre\")), person(\"Anne\", \"Cori\", email = \"a.cori@imperial.ac.uk\", role = c(\"aut\")), person(\"Zhian N.\", \"Kamvar\", email = \"zkamvar@gmail.com\", role = \"ctb\"), person(\"Dirk\", \"Schumacher\", email = \"mail@dirk-schumacher.net\", role = \"ctb\"), person(\"Flavio\", \"Finger\", email = \"flavio.finger@lshtm.ac.uk\", role = \"aut\"), person(\"Charlie\", \"Whittaker\", email = \"charles.whittaker16@imperial.ac.uk\", role = \"ctb\") )",
+      "Description": "A collection of small functions useful for epidemics analysis and infectious disease modelling. This includes computation of basic reproduction numbers from growth rates, generation of hashed labels to anonymize data, and fitting discretized Gamma distributions.",
+      "Depends": [
+        "R (>= 3.3.0)"
+      ],
+      "License": "MIT + file LICENSE",
+      "Encoding": "UTF-8",
+      "Suggests": [
+        "testthat",
+        "roxygen2",
+        "outbreaks",
+        "incidence (>= 1.4.1)",
+        "knitr",
+        "rmarkdown",
+        "magrittr",
+        "ggplot2",
+        "tibble",
+        "covr"
+      ],
+      "Imports": [
+        "sodium",
+        "distcrete",
+        "stringi",
+        "dplyr",
+        "purrr",
+        "rlang",
+        "tidyr"
+      ],
+      "RoxygenNote": "7.3.2",
+      "Config/testthat/edition": "3",
+      "URL": "http://www.repidemicsconsortium.org/epitrix/",
+      "BugReports": "https://github.com/reconhub/epitrix/issues",
+      "VignetteBuilder": "knitr",
+      "NeedsCompilation": "no",
+      "Author": "Thibaut Jombart [aut, cre], Anne Cori [aut], Zhian N. Kamvar [ctb], Dirk Schumacher [ctb], Flavio Finger [aut], Charlie Whittaker [ctb]",
+      "Maintainer": "Thibaut Jombart <thibautjombart@gmail.com>",
+      "Repository": "RSPM"
     },
     "evaluate": {
       "Package": "evaluate",
@@ -5938,6 +5998,30 @@
       "Author": "Sebastian Funk [aut, cre], Lander Willem [aut], Hugo Gruson [aut], Maria Bekker-Nielsen Dunbar [ctb], Carl A. B. Pearson [ctb], Sam Clifford [ctb], Christopher Jarvis [ctb], Alexis Robert [ctb], Niel Hens [ctb], Pietro Coletti [col, dtm]",
       "Maintainer": "Sebastian Funk <sebastian.funk@lshtm.ac.uk>",
       "Repository": "CRAN"
+    },
+    "sodium": {
+      "Package": "sodium",
+      "Version": "1.4.0",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "A Modern and Easy-to-Use Crypto Library",
+      "Authors@R": "person(\"Jeroen\", \"Ooms\", role = c(\"aut\", \"cre\"), email = \"jeroenooms@gmail.com\", comment = c(ORCID = \"0000-0002-4035-0289\"))",
+      "Description": "Bindings to 'libsodium' <https://doc.libsodium.org/>: a modern,  easy-to-use software library for encryption, decryption, signatures, password hashing and more. Sodium uses curve25519, a state-of-the-art Diffie-Hellman  function by Daniel Bernstein, which has become very popular after it was  discovered that the NSA had backdoored Dual EC DRBG.",
+      "License": "MIT + file LICENSE",
+      "URL": "https://docs.ropensci.org/sodium/ https://github.com/r-lib/sodium",
+      "BugReports": "https://github.com/r-lib/sodium/issues",
+      "SystemRequirements": "libsodium (>= 1.0.3)",
+      "VignetteBuilder": "knitr",
+      "Suggests": [
+        "knitr",
+        "rmarkdown"
+      ],
+      "RoxygenNote": "7.2.3",
+      "NeedsCompilation": "yes",
+      "Author": "Jeroen Ooms [aut, cre] (<https://orcid.org/0000-0002-4035-0289>)",
+      "Maintainer": "Jeroen Ooms <jeroenooms@gmail.com>",
+      "Repository": "RSPM",
+      "Encoding": "UTF-8"
     },
     "stringi": {
       "Package": "stringi",
