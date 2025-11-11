@@ -10,7 +10,6 @@
 library(incidence2) # for uk covid daily deaths
 library(EpiNow2) # to estimate time-varying reproduction number
 library(epiparameter) # to access delay distributions
-library(cfr) # for Ebola data (included in this package)
 library(dplyr) # to format input and outputs
 library(ggplot2) # to generate plots
 
